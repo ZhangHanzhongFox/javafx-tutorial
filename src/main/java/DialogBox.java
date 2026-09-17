@@ -1,7 +1,10 @@
+import java.io.IOException;
 import java.util.Collections;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -13,22 +16,24 @@ import javafx.scene.layout.HBox;
  * Displays a chat message alongside the speaker's picture.
  */
 public class DialogBox extends HBox {
+    @FXML
+    private Label dialog;
+    @FXML
+    private ImageView displayPicture;
 
-    /**
-     * Creates a dialog box for a message and speaker image.
-     *
-     * @param text message to display
-     * @param image speaker image to display
-     */
-    public DialogBox(String text, Image image) {
-        Label dialog = new Label(text);
-        ImageView displayPicture = new ImageView(image);
+    private DialogBox(String text, Image image) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(
+                    MainWindow.class.getResource("/view/DialogBox.fxml"));
+            fxmlLoader.setController(this);
+            fxmlLoader.setRoot(this);
+            fxmlLoader.load();
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to load a dialog box", e);
+        }
 
-        dialog.setWrapText(true);
-        displayPicture.setFitWidth(100.0);
-        displayPicture.setFitHeight(100.0);
-        setAlignment(Pos.TOP_RIGHT);
-        getChildren().addAll(dialog, displayPicture);
+        dialog.setText(text);
+        displayPicture.setImage(image);
     }
 
     /**
